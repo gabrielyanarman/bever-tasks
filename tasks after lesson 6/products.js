@@ -1,4 +1,3 @@
-
 function checkType(executionContext) {
     const formContext = executionContext.getFormContext();
     const productType = formContext.getAttribute("new_os_type").getText();
