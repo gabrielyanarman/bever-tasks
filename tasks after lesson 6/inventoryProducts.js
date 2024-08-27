@@ -149,6 +149,7 @@ async function getPricePerUnit(executionContext) {
     <link-entity name="new_price_list_item" from="new_fk_product" to="new_productid" link-type="outer" alias="ak">
       <attribute name="new_fk_price_list"/>
       <attribute name="new_mon_price_per_unit"/>
+      <attribute name="transactioncurrencyid"/>
         <filter type="and">
           <condition attribute="new_fk_product" operator="eq" value="${productId}"/>
         </filter>
@@ -183,6 +184,15 @@ async function getPricePerUnit(executionContext) {
         formContext
           .getAttribute("new_mon_price_per_unit")
           .setValue(filteredResult[0]["ak.new_mon_price_per_unit"]);
+        formContext.getAttribute("transactioncurrencyid").setValue([
+          {
+            id: filteredResult[0]["ak.transactioncurrencyid"],
+            name: filteredResult[0][
+              "ak.transactioncurrencyid@OData.Community.Display.V1.FormattedValue"
+            ],
+            entityType: "transactioncurrency",
+          },
+        ]);
     } else {
       const product = result.entities.filter((item) => item["new_productid"] === correctId(productId))[0]
       formContext
