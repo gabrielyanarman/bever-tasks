@@ -119,6 +119,7 @@ async function getPricePerUnit(executionContext) {
   const productLookup = formContext
       .getAttribute("new_fk_product")
       .getValue();
+
     if (productLookup === null || !productLookup.length) return;
 
     const productId = productLookup[0].id
@@ -171,6 +172,8 @@ async function getPricePerUnit(executionContext) {
       fetchXml
     );
 
+    if (result === null || !result.entities.length) return;
+
     const filteredResult = result.entities.filter((item) => {
       if (
         item["new_productid"] === correctId(productId) &&
@@ -211,4 +214,43 @@ async function getPricePerUnit(executionContext) {
   } catch (error) {
     console.error(error);
   }
+}
+
+async function checkInventoryProductExistence(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const inventoryLookup = formContext.getAttribute("new_fk_inventory").getValue()
+  if (inventoryLookup === null || !inventoryLookup.length) return;
+  const inventoryId = inventoryLookup[0].id;
+
+  const productLookup = formContext.getAttribute("new_fk_product").getValue();
+  if (productLookup === null || !productLookup.length) return;
+  const productId = productLookup[0].id;
+
+  let fetchXml = `
+    <fetch> version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+      <entity name="new_inventory_product">
+      <attribute name="new_inventory_productid"/>
+      <attribute name="new_name"/>
+      <attribute name="new_fk_product"/>
+      <order attribute="new_name" descending="false"/>
+        <filter type="and">
+        <condition attribute="new_fk_inventory" operator="eq" value="${inventoryId}"/>
+        </filter>
+      </entity>
+    </fetch>
+  `;
+
+  fetchXml = "?fetchXml=" + encodeURIComponent(fetchXml);
+
+  const fetchResult = await Xrm.WebApi.retrieveMultipleRecords('new_inventory_product', fetchXml)
+
+  if (fetchResult === null || !fetchResult.entities.length) return;
+
+  const isExisted = fetchResult.entities.find(item => item["_new_fk_product_value"] === correctId(productId))
+
+  isExisted
+    ? formContext
+        .getControl("new_fk_product")
+        .setNotification("Product is already added", 1)
+    : formContext.getControl("new_fk_product").clearNotification(1);
 }
