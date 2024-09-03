@@ -115,21 +115,18 @@ async function setCurrency(executionContext) {
 
 async function getPricePerUnit(executionContext) {
   const formContext = executionContext.getFormContext();
+  const productLookup = formContext.getAttribute("new_fk_product").getValue();
 
-  const productLookup = formContext
-      .getAttribute("new_fk_product")
-      .getValue();
+  if (productLookup === null || !productLookup.length) return;
 
-    if (productLookup === null || !productLookup.length) return;
+  const productId = productLookup[0].id;
 
-    const productId = productLookup[0].id
+  const inventoryLookup = formContext
+    .getAttribute("new_fk_inventory")
+    .getValue();
+  if (inventoryLookup === null || !inventoryLookup.length) return;
 
-    const inventoryLookup = formContext
-      .getAttribute("new_fk_inventory")
-      .getValue();
-    if (inventoryLookup === null || !inventoryLookup.length) return
-
-    const inventoryId = inventoryLookup[0].id
+  const inventoryId = inventoryLookup[0].id;
 
   let fetchXml = `
   <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
@@ -138,6 +135,7 @@ async function getPricePerUnit(executionContext) {
     <attribute name="new_name"/>
     <attribute name="new_mon_price_per_unit"/>
     <attribute name="transactioncurrencyid"/>
+    <attribute name="exchangerate"/>
     <order attribute="new_name" descending="false"/>
     <link-entity name="new_inventory_product" from="new_fk_product" to="new_productid" link-type="outer" alias="ai">
       <link-entity name="new_inventory" from="new_inventoryid" to="new_fk_inventory" link-type="outer" alias="aj">
@@ -183,31 +181,37 @@ async function getPricePerUnit(executionContext) {
       }
     });
 
-    if(filteredResult.length) {
-        formContext
-          .getAttribute("new_mon_price_per_unit")
-          .setValue(filteredResult[0]["ak.new_mon_price_per_unit"]);
-        formContext.getAttribute("transactioncurrencyid").setValue([
-          {
-            id: filteredResult[0]["ak.transactioncurrencyid"],
-            name: filteredResult[0][
-              "ak.transactioncurrencyid@OData.Community.Display.V1.FormattedValue"
-            ],
-            entityType: "transactioncurrency",
-          },
-        ]);
-    } else {
-      const product = result.entities.filter((item) => item["new_productid"] === correctId(productId))[0]
+    const currencyLookup = formContext
+      .getAttribute("transactioncurrencyid")
+      .getValue();
+
+    if (currencyLookup === null || !currencyLookup.length) return;
+    const currencyId = currencyLookup[0].id;
+
+    const currency = await Xrm.WebApi.retrieveRecord(
+      "transactioncurrency",
+      currencyId,
+      "?$select=exchangerate"
+    );
+
+    const currencyExchangeRate = currency.exchangerate;
+
+    if (filteredResult.length) {
       formContext
         .getAttribute("new_mon_price_per_unit")
-        .setValue(product["new_mon_price_per_unit"]);
-      formContext.getAttribute("transactioncurrencyid").setValue([
-        {
-          id: "1bac210e-8b5b-ef11-bfe2-002248a3ed7e",
-          name: "US Dollar",
-          entityType: "transactioncurrency",
-        },
-      ]);
+        .setValue(filteredResult[0]["ak.new_mon_price_per_unit"]);
+
+    } else {
+      const product = result.entities.filter(
+        (item) => item["new_productid"] === correctId(productId)
+      )[0];
+      product["exchangerate"] === currencyExchangeRate
+        ? formContext
+            .getAttribute("new_mon_price_per_unit")
+            .setValue(product["new_mon_price_per_unit"])
+        : formContext
+            .getAttribute("new_mon_price_per_unit")
+            .setValue(product["new_mon_price_per_unit"]*currencyExchangeRate);
     }
 
     calculateTotalAmount(executionContext);
