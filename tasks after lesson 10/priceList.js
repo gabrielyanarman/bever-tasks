@@ -54,7 +54,7 @@ async function initializePriceList(formContext) {
             await Xrm.WebApi.createRecord("new_price_list_item", data);
         })
 
-        alert("successfully initialized, please refresh the page");
+        formContext.getControl("price_list_item").refresh()
 
     } catch(error) {
         console.error(error)

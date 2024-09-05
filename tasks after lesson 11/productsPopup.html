@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://orgf6c1bd02.crm4.dynamics.com//WebResources/new_css_inventory_product_popup" />
+</head>
+<body>
+    <form id="popupForm">
+        <div class="formContainer">
+            <label for="products">Choose a product:</label>
+            <select name="products" id="products">
+            </select>
+
+            <label for="operations">Choose a operation:</label>
+            <select name="operations" id="operations">
+                <option value="1">In</option>
+                <option value="0">Out</option>
+            </select>
+
+            <label for="quantity">Choose a quantity:</label>
+            <input type="number" id="quantity" name="quantity" />
+
+            <div class="formFooter">
+                <button type="submit" id="okButton" class="button">Ok</button>
+                <button type="button" id="cancelButton" class="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+    <script src="https://orgf6c1bd02.crm4.dynamics.com//WebResources/new_update_quantity_from_popup"></script>
+</body>
+</html>
