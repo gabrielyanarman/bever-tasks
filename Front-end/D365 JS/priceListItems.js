@@ -27,17 +27,17 @@ async function setCurrencyFromPriceListLookup(executionContext) {
           entityType: "transactioncurrency",
         },
       ]);
-    } catch(error) {
-      console.error(error.message)
+    } catch (error) {
+      console.error(error.message);
     }
   }
 }
 
 function setNameFromProduct(executionContext) {
-    const formContext = executionContext.getFormContext();
-    const product = formContext.getAttribute("new_fk_product").getValue();
+  const formContext = executionContext.getFormContext();
+  const product = formContext.getAttribute("new_fk_product").getValue();
 
-    product !== null && product.length
-      ? formContext.getAttribute("new_name").setValue(product[0].name)
-      : formContext.getAttribute("new_name").setValue('');
+  product !== null && product.length
+    ? formContext.getAttribute("new_name").setValue(product[0].name)
+    : formContext.getAttribute("new_name").setValue("");
 }

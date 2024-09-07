@@ -28,7 +28,6 @@ function getSelectedOption(selectElementId) {
 }
 
 async function updateQuantity() {
-
   let fetchXml = `
   <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
     <entity name="new_product">
@@ -78,15 +77,15 @@ async function updateQuantity() {
     fetchResult.entities.forEach((item) => {
       let isUnique = true;
       products.forEach((product) => {
-        if(product["new_productid"] === item["new_productid"]) {
-          isUnique = false
+        if (product["new_productid"] === item["new_productid"]) {
+          isUnique = false;
         }
-      })
-      if(isUnique) {
-        products.push(item)
+      });
+      if (isUnique) {
+        products.push(item);
       }
-    })
-    
+    });
+
     const productsDropDown = document.getElementById("products");
 
     products.forEach((product) => {
@@ -103,7 +102,7 @@ async function updateQuantity() {
 
     cancelButton.addEventListener("click", () => {
       window.close();
-    })
+    });
 
     popupForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -114,9 +113,14 @@ async function updateQuantity() {
         +inputElement.value,
       ];
 
-      if(!selectedProductId || !selectedOperationValue || !inputQuantity || inputQuantity < 0) {
+      if (
+        !selectedProductId ||
+        !selectedOperationValue ||
+        !inputQuantity ||
+        inputQuantity < 0
+      ) {
         alert("incorrect data");
-        return
+        return;
       }
       const existingProductInInventory = fetchResult.entities.filter(
         (product) =>
@@ -133,21 +137,25 @@ async function updateQuantity() {
       // if we try to reduce the quantity of a product that is out of stock
       if (!existingProductInInventory && selectedOperationValue === "0") {
         alert("This product doesn't exist");
+        return;
       }
 
       // if we try to reduce the amount of product that is available
       if (existingProductInInventory && selectedOperationValue === "0") {
-        const existingQuantity = existingProductInInventory["ip.new_int_quantity"];
-        
+        const existingQuantity =
+          existingProductInInventory["ip.new_int_quantity"];
+
         if (existingQuantity < inputQuantity) {
           alert("Тhere is not that much in inventory");
+          return;
         } else if (existingQuantity === inputQuantity) {
           await parent.Xrm.WebApi.deleteRecord(
             "new_inventory_product",
             existingProductInInventory["ip.new_inventory_productid"]
           );
         } else {
-          const updatedQuantity = existingProductInInventory["ip.new_int_quantity"] - inputQuantity;
+          const updatedQuantity =
+            existingProductInInventory["ip.new_int_quantity"] - inputQuantity;
 
           const productExistingInPriceList = fetchResult.entities.filter(
             (item) => item["pi.new_fk_product"] === correctId(selectedProductId)
@@ -165,9 +173,7 @@ async function updateQuantity() {
 
           const data = {
             ["new_int_quantity"]: updatedQuantity,
-            ["new_mon_total_amount"]:
-              pricePerUnit *
-              updatedQuantity,
+            ["new_mon_total_amount"]: pricePerUnit * updatedQuantity,
           };
 
           await parent.Xrm.WebApi.updateRecord(
@@ -238,7 +244,7 @@ async function updateQuantity() {
 
         const data = {
           ["new_int_quantity"]: updatedQuantity,
-          ["new_mon_total_amount"]: updatedQuantity*pricePerUnit,
+          ["new_mon_total_amount"]: updatedQuantity * pricePerUnit,
         };
         await parent.Xrm.WebApi.updateRecord(
           "new_inventory_product",

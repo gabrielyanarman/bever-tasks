@@ -1,8 +1,10 @@
 async function openInventoryProductPopup(formContext) {
   const inventoryId = formContext.data.entity.getId();
-  const priceListLookup = formContext.getAttribute("new_fk_price_list").getValue();
-  if(priceListLookup === null || !priceListLookup.length) return ;
-
+  const priceListLookup = formContext
+    .getAttribute("new_fk_price_list")
+    .getValue();
+  if (priceListLookup === null || !priceListLookup.length) return;
+  
   const priceListId = priceListLookup[0].id;
   const pageInput = {
     pageType: "webresource",
