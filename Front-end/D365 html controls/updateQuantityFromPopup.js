@@ -34,6 +34,7 @@ async function updateQuantity() {
       <attribute name="new_productid"/>
       <attribute name="new_name"/>
       <attribute name="new_mon_price_per_unit"/>
+      <attribute name="new_os_type"/>
       <order attribute="new_name" descending="false"/>
       <link-entity name="new_inventory_product" from="new_fk_product" to="new_productid" link-type="outer" alias="ip">
         <attribute name="new_int_quantity"/>
@@ -81,7 +82,7 @@ async function updateQuantity() {
           isUnique = false;
         }
       });
-      if (isUnique) {
+      if (isUnique && item["new_os_type"] !== 100000001) {
         products.push(item);
       }
     });
