@@ -118,3 +118,16 @@ async function setInventory(executionContext) {
     },
   ]);
 }
+
+// function for calculate total amount
+function calculateTotalAmount(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const quantity = formContext.getAttribute("new_int_quantity").getValue();
+  const price = formContext.getAttribute("new_mon_price_per_unit").getValue();
+  if (quantity !== null && price !== null) {
+    const totalAmount = price * quantity;
+    formContext.getAttribute("new_mon_total_amount").setValue(totalAmount);
+  } else {
+    formContext.getAttribute("new_mon_total_amount").setValue(0);
+  }
+}
