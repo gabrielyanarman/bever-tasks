@@ -1,3 +1,5 @@
+// functions for filter products lookup
+
 let productLookupPointer = null;
 
 async function onChangeInventory(executionContext) {
@@ -53,12 +55,66 @@ function filterProducts(executionContext) {
 
   let filter = `<filter type="or">`
 
-
-  this.filteredProducts.forEach((product) => {
-    filter += `<condition attribute="new_productid" operator="eq" value="${product["new_productid"]}"/>`;
-  })
+  if (this.filteredProducts > 0) {
+    this.filteredProducts.forEach((product) => {
+      filter += `<condition attribute="new_productid" operator="eq" value="${product["new_productid"]}"/>`;
+    });
+  } else {
+    filter += `<condition attribute="new_productid" operator="eq" value="{00000000-0000-0000-0000-000000000000}"/>`;
+  }
+    this.filteredProducts.forEach((product) => {
+      filter += `<condition attribute="new_productid" operator="eq" value="${product["new_productid"]}"/>`;
+    });
 
   filter += `</filter>`;
 
   control.addCustomFilter(filter, "new_product")
+}
+
+
+// function for selecting inventory if field is blank
+
+async function setInventory(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const inventoryLookup = formContext.getAttribute("new_fk_inventory").getValue();
+  if(inventoryLookup !== null) return
+
+  const productLookup = formContext.getAttribute("new_fk_product").getValue();
+  if(productLookup === null || !productLookup.length) return;
+  const productId = productLookup[0].id;
+
+  let fetchXml = `
+    <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" aggregate="true">
+      <entity name="new_inventory_product">
+      <attribute name="new_inventory_productid" groupby="true" alias="ipi"/>
+      <attribute name="new_fk_inventory" groupby="true" alias="inventory"/>
+      <attribute name="new_int_quantity" aggregate="max" alias="quantity"/>
+        <filter type="and">
+        <condition attribute="new_fk_product" operator="eq" value="${productId}"/>
+        </filter>
+      </entity>
+    </fetch>
+  `;
+
+  fetchXml = "?fetchXml=" + encodeURIComponent(fetchXml)
+
+  const fetchResult = await Xrm.WebApi.retrieveMultipleRecords("new_inventory_product", fetchXml);
+  const filteredInventoryProducts = fetchResult.entities
+  if (!filteredInventoryProducts.length) return;
+
+  let result = filteredInventoryProducts[0];
+
+  filteredInventoryProducts.forEach((inventoryProduct) => {
+    if(inventoryProduct.quantity > result.quantity) {
+      result = inventoryProduct
+    }
+  })
+
+  formContext.getAttribute("new_fk_inventory").setValue([
+    {
+      id: result["inventory"],
+      name: result["inventory@OData.Community.Display.V1.FormattedValue"],
+      entityType: "new_inventory"
+    },
+  ]);
 }
