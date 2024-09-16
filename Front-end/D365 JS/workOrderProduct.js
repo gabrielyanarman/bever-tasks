@@ -1,15 +1,13 @@
-// functions for filter products lookup
-
 let productLookupPointer = null;
 
 async function onChangeInventory(executionContext) {
   const formContext = executionContext.getFormContext();
-  const inventoryLookup = formContext.getAttribute("new_fk_inventory").getValue();
+  const inventoryRef = formContext.getAttribute("new_fk_inventory").getValue();
 
   if(productLookupPointer !== null) formContext.getControl("new_fk_product").removePreSearch(productLookupPointer);
-  if(inventoryLookup === null || !inventoryLookup.length) return;
+  if(inventoryRef === null || !inventoryRef.length) return;
 
-  const inventoryId = inventoryLookup[0].id;
+  const inventoryId = inventoryRef[0].id;
 
   let fetchXml = `
     <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
@@ -32,16 +30,13 @@ async function onChangeInventory(executionContext) {
 
   fetchXml = "?fetchXml=" + encodeURIComponent(fetchXml);
 
-  try {
-    const fetchResult = await Xrm.WebApi.retrieveMultipleRecords("new_product", fetchXml);
-    const filteredProducts = fetchResult.entities;
+  const fetchResult = await Xrm.WebApi.retrieveMultipleRecords("new_product", fetchXml);
+  const filteredProducts = fetchResult.entities;
 
-    productLookupPointer = filterProducts.bind({ filteredProducts });
+  productLookupPointer = filterProducts.bind({ filteredProducts });
 
-    formContext.getControl("new_fk_product").addPreSearch(productLookupPointer);
-  } catch (error) {
-    console.error(error)
-  } 
+  formContext.getControl("new_fk_product").addPreSearch(productLookupPointer);
+
 }
 
 function filterProducts(executionContext) {
@@ -71,17 +66,14 @@ function filterProducts(executionContext) {
   control.addCustomFilter(filter, "new_product")
 }
 
-
-// function for selecting inventory if field is blank
-
 async function setInventory(executionContext) {
   const formContext = executionContext.getFormContext();
-  const inventoryLookup = formContext.getAttribute("new_fk_inventory").getValue();
-  if(inventoryLookup !== null) return
+  const inventoryRef = formContext.getAttribute("new_fk_inventory").getValue();
+  if(inventoryRef !== null) return
 
-  const productLookup = formContext.getAttribute("new_fk_product").getValue();
-  if(productLookup === null || !productLookup.length) return;
-  const productId = productLookup[0].id;
+  const productRef = formContext.getAttribute("new_fk_product").getValue();
+  if(productRef === null || !productRef.length) return;
+  const productId = productRef[0].id;
 
   let fetchXml = `
     <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false" aggregate="true">
@@ -119,7 +111,6 @@ async function setInventory(executionContext) {
   ]);
 }
 
-// function for calculate total amount
 function calculateTotalAmount(executionContext) {
   const formContext = executionContext.getFormContext();
   const quantity = formContext.getAttribute("new_int_quantity").getValue();

@@ -11,16 +11,11 @@ function createContactsCustomView(executionContext) {
     console.error("Control not found: " + "new_fk_contact");
     return;
     }
-    const customerLookup = formContext
-        .getAttribute("new_fk_customer")
-        .getValue();
+    const customerRef = formContext.getAttribute("new_fk_customer").getValue();
 
-    let isCustomerSelected = true;
     let customerId = null;
-    if (customerLookup === null || !customerLookup.length) {
-        isCustomerSelected = false;
-    } else {
-        customerId = customerLookup[0].id;
+    if (customerRef !== null) {
+        customerId = customerRef[0].id;
     }
 
     const fetchXmlContacts = `
@@ -50,7 +45,7 @@ function createContactsCustomView(executionContext) {
         </fetch>
     `;
 
-    const fetchXml = isCustomerSelected ? fetchXmlFilteredContacts : fetchXmlContacts;
+    const fetchXml = customerId ? fetchXmlFilteredContacts : fetchXmlContacts;
     const viewId = "00000000-0000-0000-0000-000000000111";
     const viewDisplayName = "Filtered View";
     const layoutXml = `<grid name="resultset" object="1" jump="id" select="1" icon="1" preview="1">

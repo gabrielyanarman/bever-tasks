@@ -2,21 +2,11 @@ function correctId(id) {
   return id.replace('{','').replace('}','').toLowerCase()
 }
 
-function configureFieldName(executionContext) {
-  const formContext = executionContext.getFormContext();
-  const attribute = formContext.getAttribute("new_name");
-  const control = formContext.getControl("new_name");
-  if (attribute && control) {
-    attribute.setRequiredLevel("none");
-    control.setDisabled(true);
-  }
-}
-
 function setName(executionContext) {
   const formContext = executionContext.getFormContext();
-  const productLookup = formContext.getAttribute("new_fk_product").getValue();
-  if (productLookup !== null) {
-    formContext.getAttribute("new_name").setValue(productLookup[0].name);
+  const productRef = formContext.getAttribute("new_fk_product").getValue();
+  if (productRef !== null) {
+    formContext.getAttribute("new_name").setValue(productRef[0].name);
     return;
   }
   formContext.getAttribute("new_name").setValue("");
@@ -37,40 +27,21 @@ function calculateTotalAmount(executionContext) {
 function toggleFields(executionContext) {
   const formContext = executionContext.getFormContext();
   const isNewRecord = formContext.ui.getFormType() === 1;
+  if(isNewRecord) return
   const controls = formContext.ui.controls.get();
   controls.forEach((control) => {
-    const attribute = formContext.getAttribute(control.getName());
-    if (
-      attribute &&
-      attribute.getName() !== "new_name" &&
-      attribute.getName() !== "transactioncurrencyid" &&
-      attribute.getName() !== "new_mon_price_per_unit"
-    ) {
-      control.setDisabled(isNewRecord ? false : true);
-    }
+    control.setDisabled(true);
   });
 }
 
 async function setCurrency(executionContext) {
   const formContext = executionContext.getFormContext();
-  const inventoryLookup = formContext
+  const inventoryRef = formContext
     .getAttribute("new_fk_inventory")
     .getValue();
-  if (inventoryLookup === null || !inventoryLookup.length) {
-    formContext.getAttribute("transactioncurrencyid").setValue([
-      {
-        id: "1bac210e-8b5b-ef11-bfe2-002248a3ed7e",
-        name: "US Dollar",
-        entityType: "transactioncurrency",
-      },
-    ]);
-    return
-  };
+  if (inventoryRef === null || !inventoryRef.length) return
 
-  let inventoryId = inventoryLookup[0].id
-    .replace("{", "")
-    .replace("}", "")
-    .toLowerCase();
+  let inventoryId = inventoryRef[0].id;
 
   let fetchXml = `<fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
     <entity name="new_inventory_product">
@@ -92,12 +63,11 @@ async function setCurrency(executionContext) {
 
   fetchXml = "?fetchXml=" + encodeURIComponent(fetchXml);
 
-  try {
-    const result = await Xrm.WebApi.retrieveMultipleRecords(
-      "new_inventory_product",
-      fetchXml
-    );
-    if (result === null || !result.entities.length) return;
+  const result = await Xrm.WebApi.retrieveMultipleRecords(
+    "new_inventory_product",
+    fetchXml
+  );
+  if (result !== null ) {
     formContext.getAttribute("transactioncurrencyid").setValue([
       {
         id: result.entities[0]["aj.transactioncurrencyid"],
@@ -107,26 +77,28 @@ async function setCurrency(executionContext) {
         entityType: "transactioncurrency",
       },
     ]);
-  } catch (error) {
-    console.error(error.message);
   }
 }
 
 
 async function getPricePerUnit(executionContext) {
   const formContext = executionContext.getFormContext();
-  const productLookup = formContext.getAttribute("new_fk_product").getValue();
+  const productRef = formContext.getAttribute("new_fk_product").getValue();
+    const inventoryRef = formContext.getAttribute("new_fk_inventory").getValue();
 
-  if (productLookup === null || !productLookup.length) return;
+  if (
+    productRef === null ||
+    !productRef.length ||
+    inventoryRef === null ||
+    !inventoryRef.length
+  ) {
+    formContext.getAttribute("new_mon_price_per_unit").setValue(null);
+    calculateTotalAmount(executionContext);
+    return;
+  };
 
-  const productId = productLookup[0].id;
-
-  const inventoryLookup = formContext
-    .getAttribute("new_fk_inventory")
-    .getValue();
-  if (inventoryLookup === null || !inventoryLookup.length) return;
-
-  const inventoryId = inventoryLookup[0].id;
+  const productId = productRef[0].id;
+  const inventoryId = inventoryRef[0].id;
 
   let fetchXml = `
   <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
@@ -164,81 +136,84 @@ async function getPricePerUnit(executionContext) {
 
   fetchXml = "?fetchXml=" + encodeURIComponent(fetchXml);
 
-  try {
-    const result = await Xrm.WebApi.retrieveMultipleRecords(
-      "new_product",
-      fetchXml
-    );
+  const result = await Xrm.WebApi.retrieveMultipleRecords(
+    "new_product",
+    fetchXml
+  );
 
-    if (result === null || !result.entities.length) return;
+  if (result === null || !result.entities.length) return;
 
-    const filteredResult = result.entities.filter((item) => {
-      if (
-        item["new_productid"] === correctId(productId) &&
-        item["ab.new_inventoryid"] === correctId(inventoryId)
-      ) {
-        return item;
-      }
-    });
-
-    const currencyLookup = formContext
-      .getAttribute("transactioncurrencyid")
-      .getValue();
-
-    if (currencyLookup === null || !currencyLookup.length) return;
-    const currencyId = currencyLookup[0].id;
-
-    const currency = await Xrm.WebApi.retrieveRecord(
-      "transactioncurrency",
-      currencyId,
-      "?$select=exchangerate"
-    );
-
-    const currencyExchangeRate = currency.exchangerate;
-
-    if (filteredResult.length) {
-      formContext
-        .getAttribute("new_mon_price_per_unit")
-        .setValue(filteredResult[0]["ak.new_mon_price_per_unit"]);
-
-    } else {
-      const product = result.entities.filter(
-        (item) => item["new_productid"] === correctId(productId)
-      )[0];
-      product["exchangerate"] === currencyExchangeRate
-        ? formContext
-            .getAttribute("new_mon_price_per_unit")
-            .setValue(product["new_mon_price_per_unit"])
-        : formContext
-            .getAttribute("new_mon_price_per_unit")
-            .setValue(product["new_mon_price_per_unit"]*currencyExchangeRate);
+  const filteredResult = result.entities.filter((item) => {
+    if (
+      item["new_productid"] === correctId(productId) &&
+      item["ab.new_inventoryid"] === correctId(inventoryId)
+    ) {
+      return item;
     }
+  });
 
-    calculateTotalAmount(executionContext);
-  } catch (error) {
-    console.error(error);
+  const currencyRef = formContext
+    .getAttribute("transactioncurrencyid")
+    .getValue();
+
+  const currencyId = currencyRef[0].id;
+
+  const currency = await Xrm.WebApi.retrieveRecord(
+    "transactioncurrency",
+    currencyId,
+    "?$select=exchangerate"
+  );
+
+  const currencyExchangeRate = currency.exchangerate;
+
+  if (filteredResult.length) {
+    formContext
+      .getAttribute("new_mon_price_per_unit")
+      .setValue(filteredResult[0]["ak.new_mon_price_per_unit"]);
+
+  } else {
+    const product = result.entities.filter(
+      (item) => item["new_productid"] === correctId(productId)
+    )[0];
+    product["exchangerate"] === currencyExchangeRate
+      ? formContext
+          .getAttribute("new_mon_price_per_unit")
+          .setValue(product["new_mon_price_per_unit"])
+      : formContext
+          .getAttribute("new_mon_price_per_unit")
+          .setValue(product["new_mon_price_per_unit"]*currencyExchangeRate);
   }
+
+  calculateTotalAmount(executionContext);
+  
 }
 
 async function checkInventoryProductExistence(executionContext) {
   const formContext = executionContext.getFormContext();
-  const inventoryLookup = formContext.getAttribute("new_fk_inventory").getValue()
-  if (inventoryLookup === null || !inventoryLookup.length) return;
-  const inventoryId = inventoryLookup[0].id;
-
-  const productLookup = formContext.getAttribute("new_fk_product").getValue();
-  if (productLookup === null || !productLookup.length) return;
-  const productId = productLookup[0].id;
+  const inventoryRef = formContext.getAttribute("new_fk_inventory").getValue()
+  const productRef = formContext.getAttribute("new_fk_product").getValue();
+  if (
+    inventoryRef === null ||
+    !inventoryRef.length ||
+    productRef === null ||
+    !productRef.length
+  ) {
+    formContext.getControl("new_fk_product").clearNotification(1);
+    return
+  }
+  const inventoryId = inventoryRef[0].id;
+  const productId = productRef[0].id;
 
   let fetchXml = `
     <fetch> version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
       <entity name="new_inventory_product">
       <attribute name="new_inventory_productid"/>
       <attribute name="new_name"/>
-      <attribute name="new_fk_product"/>
+      <attribute name="new_fk_product"/> 
       <order attribute="new_name" descending="false"/>
         <filter type="and">
         <condition attribute="new_fk_inventory" operator="eq" value="${inventoryId}"/>
+        <condition attribute="new_fk_product" operator="eq" value="${productId}"/>
         </filter>
       </entity>
     </fetch>
@@ -248,13 +223,12 @@ async function checkInventoryProductExistence(executionContext) {
 
   const fetchResult = await Xrm.WebApi.retrieveMultipleRecords('new_inventory_product', fetchXml)
 
-  if (fetchResult === null || !fetchResult.entities.length) return;
+  if (fetchResult === null || !fetchResult.entities.length) {
+    formContext.getControl("new_fk_product").clearNotification(1);
+    return
+  };
 
-  const isExisted = fetchResult.entities.find(item => item["_new_fk_product_value"] === correctId(productId))
-
-  isExisted
-    ? formContext
-        .getControl("new_fk_product")
-        .setNotification("Product is already added", 1)
-    : formContext.getControl("new_fk_product").clearNotification(1);
-}
+  formContext
+    .getControl("new_fk_product")
+    .setNotification("Product is already added", 1);
+} 

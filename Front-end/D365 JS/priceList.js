@@ -22,56 +22,53 @@ async function initializePriceList(formContext) {
 
   fetchXml = "?fetchXml=" + encodeURIComponent(fetchXml);
 
-  try {
-    const fetchResult = await Xrm.WebApi.retrieveMultipleRecords(
-      "new_product",
-      fetchXml
+  const fetchResult = await Xrm.WebApi.retrieveMultipleRecords(
+    "new_product",
+    fetchXml
+  );
+  if (fetchResult === null || !fetchResult.entities.length) return;
+
+  const filteredResult = fetchResult.entities.filter(
+    (item) => item["pli.new_fk_price_list"] === correctId(priceListId)
+  );
+
+  const currencyRef = formContext
+    .getAttribute("transactioncurrencyid")
+    .getValue();
+  if (currencyRef === null || !currencyRef.length) return;
+  const currencyId = currencyRef[0].id;
+
+  const products = fetchResult.entities.reduce((acc, product) => {
+    if (
+      !acc.some((item) => item["new_productid"] === product["new_productid"])
+    ) {
+      acc.push(product);
+    }
+    return acc;
+  }, []);
+
+  filteredResult.forEach(async (product) => {
+    await Xrm.WebApi.deleteRecord(
+      "new_price_list_item",
+      product["pli.new_price_list_itemid"]
     );
-    if (fetchResult === null || !fetchResult.entities.length) return;
+  });
 
-    const filteredResult = fetchResult.entities.filter(
-      (item) => item["pli.new_fk_price_list"] === correctId(priceListId)
-    );
+  products.forEach(async (product) => {
+    const data = {
+      ["new_name"]: product["new_name"],
+      ["new_fk_price_List@odata.bind"]: `/new_price_lists(${correctId(
+        priceListId
+      )})`,
+      ["new_fk_product@odata.bind"]: `/new_products(${product["new_productid"]})`,
+      ["transactioncurrencyid@odata.bind"]: `/transactioncurrencies(${correctId(
+        currencyId
+      )})`,
+      ["new_mon_price_per_unit"]: 1,
+    };
+    await Xrm.WebApi.createRecord("new_price_list_item", data);
+  });
 
-    const currencyLookup = formContext
-      .getAttribute("transactioncurrencyid")
-      .getValue();
-    if (currencyLookup === null || !currencyLookup.length) return;
-    const currencyId = currencyLookup[0].id;
-
-    const products = fetchResult.entities.reduce((acc, product) => {
-      if (
-        !acc.some((item) => item["new_productid"] === product["new_productid"])
-      ) {
-        acc.push(product);
-      }
-      return acc;
-    }, []);
-
-    filteredResult.forEach(async (product) => {
-      await Xrm.WebApi.deleteRecord(
-        "new_price_list_item",
-        product["pli.new_price_list_itemid"]
-      );
-    });
-
-    products.forEach(async (product) => {
-      const data = {
-        ["new_name"]: product["new_name"],
-        ["new_fk_price_List@odata.bind"]: `/new_price_lists(${correctId(
-          priceListId
-        )})`,
-        ["new_fk_product@odata.bind"]: `/new_products(${product["new_productid"]})`,
-        ["transactioncurrencyid@odata.bind"]: `/transactioncurrencies(${correctId(
-          currencyId
-        )})`,
-        ["new_mon_price_per_unit"]: 1,
-      };
-      await Xrm.WebApi.createRecord("new_price_list_item", data);
-    });
-
-    formContext.getControl("price_list_item").refresh();
-  } catch (error) {
-    console.error(error);
-  }
+  formContext.getControl("price_list_item").refresh();
+  
 }

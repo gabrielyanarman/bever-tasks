@@ -1,11 +1,11 @@
 async function openInventoryProductPopup(formContext) {
   const inventoryId = formContext.data.entity.getId();
-  const priceListLookup = formContext
+  const priceListRef = formContext
     .getAttribute("new_fk_price_list")
     .getValue();
-  if (priceListLookup === null || !priceListLookup.length) return;
+  if (priceListRef === null || !priceListRef.length) return;
   
-  const priceListId = priceListLookup[0].id;
+  const priceListId = priceListRef[0].id;
   const pageInput = {
     pageType: "webresource",
     webresourceName: "new_html_inventory_product_popup",
@@ -18,12 +18,6 @@ async function openInventoryProductPopup(formContext) {
     position: 1,
   };
 
-  try {
-    await Xrm.Navigation.navigateTo(pageInput, navigationOptions);
-  } catch (error) {
-    console.error(error);
-    Xrm.Navigation.openAlertDialog({ text: error.message });
-  }
-
+  await Xrm.Navigation.navigateTo(pageInput, navigationOptions);
   formContext.getControl("inventory_products").refresh();
 }
