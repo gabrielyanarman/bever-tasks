@@ -1,0 +1,41 @@
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Test D365 connector.exe.config
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Test D365 connector.exe
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Test D365 connector.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D365 connector.csproj.AssemblyReference.cache
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D365 connector.csproj.CoreCompileInputs.cache
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D365 connector.exe
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D365 connector.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Rest.ClientRuntime.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Xrm.Sdk.Deployment.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Xrm.Sdk.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Xrm.Sdk.Workflow.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Xrm.Tooling.Connector.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Buffers.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Memory.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.ServiceModel.Http.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.ServiceModel.Primitives.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Text.Json.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.ValueTuple.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\Microsoft.Xrm.Sdk.Workflow.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Buffers.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Memory.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.ServiceModel.Http.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.ServiceModel.Primitives.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Text.Encodings.Web.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Text.Json.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D365 connector.csproj.SuggestedBindingRedirects.cache
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D365 connector.exe.config
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\training\Test D365 connector\Test D365 connector\obj\Debug\Test D36.DB9C1F6D.Up2Date
