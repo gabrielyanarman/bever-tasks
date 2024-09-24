@@ -21,6 +21,7 @@ namespace Customer_Management
                     Entity inventory = (Entity)context.InputParameters["Target"];                   
                     if (inventory.Contains("new_fk_price_list"))
                     {
+                        if (inventory["new_fk_price_list"] == null) return;
                         QueryExpression inventoryProductsQuery = new QueryExpression
                         {
                             EntityName = "new_inventory_product",
