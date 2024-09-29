@@ -1,0 +1,32 @@
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Inventory Management.dll.config
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Inventory Management.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Inventory Management.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Microsoft.Xrm.Sdk.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Microsoft.Xrm.Sdk.Workflow.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Buffers.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Memory.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.ServiceModel.Http.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.ServiceModel.Primitives.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Text.Json.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.ValueTuple.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\Microsoft.Xrm.Sdk.Workflow.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Buffers.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Memory.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.ServiceModel.Http.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.ServiceModel.Primitives.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Text.Encodings.Web.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Text.Json.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\obj\Debug\Inventory Management.csproj.AssemblyReference.cache
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\obj\Debug\Inventory Management.csproj.CoreCompileInputs.cache
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\obj\Debug\Inventor.CCAFEA7E.Up2Date
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\obj\Debug\Inventory Management.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Inventory Management\obj\Debug\Inventory Management.pdb

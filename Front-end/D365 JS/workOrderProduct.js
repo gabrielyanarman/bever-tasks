@@ -36,7 +36,6 @@ async function onChangeInventory(executionContext) {
   productLookupPointer = filterProducts.bind({ filteredProducts });
 
   formContext.getControl("new_fk_product").addPreSearch(productLookupPointer);
-
 }
 
 function filterProducts(executionContext) {
@@ -109,6 +108,101 @@ async function setInventory(executionContext) {
       entityType: "new_inventory"
     },
   ]);
+  setPricingValues(executionContext)
+}
+
+async function setPricingValues(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const inventoryRef = formContext.getAttribute("new_fk_inventory").getValue();
+  if (inventoryRef === null) return;
+  inventoryId = inventoryRef[0].id;
+
+  const productRef = formContext.getAttribute("new_fk_product").getValue();
+  if (productRef === null) return;
+  const productId = productRef[0].id;
+
+  const [productCost, productDefaultPricePerUnit] = await getProductInfo(productId);
+
+  const { currenciId, currencyName, productPricePerUnit, exchangerate } = await getPriceListInfo(inventoryId, productId);
+    
+  const currencyValue = {
+    entityType: "transactioncurrency",
+    id: currenciId,
+    name: currencyName
+  };
+  const pricePerUnit = productPricePerUnit
+    ? productPricePerUnit
+    : productDefaultPricePerUnit * exchangerate;
+
+  formContext.getAttribute("transactioncurrencyid").setValue([currencyValue]);
+  formContext.getAttribute("new_mon_price_per_unit").setValue(pricePerUnit);
+  formContext.getAttribute("new_mon_cost").setValue(productCost*exchangerate);
+}
+
+async function getProductInfo(id) {
+  const product = await Xrm.WebApi.retrieveRecord("new_product", id, "?$select=new_mon_cost,new_mon_price_per_unit");
+  return [product["new_mon_cost"], product["new_mon_price_per_unit"]];
+}
+async function getPriceListInfo(inventoryId, productId) {
+  let fetchXmlPl = `
+    <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="true">
+      <entity name="new_price_list">
+        <attribute name="new_price_listid"/>
+        <attribute name="new_name"/>
+        <attribute name="transactioncurrencyid"/>
+        <attribute name="exchangerate"/>
+        <order attribute="new_name" descending="false"/>
+          <link-entity name="new_inventory" from="new_fk_price_list" to="new_price_listid" link-type="inner" alias="iv">
+            <filter type="and">
+              <condition attribute="new_inventoryid" operator="eq" value="${inventoryId}"/>
+            </filter>
+          </link-entity>
+      </entity>
+    </fetch>
+  `;
+
+  fetchXmlPl = "?fetchXml=" + encodeURIComponent(fetchXmlPl);
+  const fetchResultPl = await Xrm.WebApi.retrieveMultipleRecords(
+    "new_price_list",
+    fetchXmlPl
+  );
+  if (fetchResultPl === null || !fetchResultPl.entities.length) return;
+  const priceList = fetchResultPl.entities[0];
+  const [priceListId, currenciId, currencyName, exchangerate] = [
+    priceList["new_price_listid"],
+    priceList["_transactioncurrencyid_value"],
+    priceList["_transactioncurrencyid_value@OData.Community.Display.V1.FormattedValue"],
+    priceList["exchangerate"],
+  ];
+
+  let productPricePerUnit = null;
+
+  let fetchXmlPlI = `
+    <fetch version="1.0" output-format="xml-platform" mapping="logical" distinct="false">
+      <entity name="new_price_list_item">
+        <attribute name="new_price_list_itemid"/>
+        <attribute name="new_name"/>
+        <attribute name="new_mon_price_per_unit"/>
+        <order attribute="new_name" descending="false"/>
+          <filter type="and">
+            <condition attribute="new_fk_product" operator="eq" value="${productId}"/>
+            <condition attribute="new_fk_price_list" operator="eq" value="${priceListId}"/>
+          </filter>
+      </entity>
+    </fetch>
+  `;
+
+  fetchXmlPlI = "?fetchXml=" + encodeURIComponent(fetchXmlPlI);
+
+  const fetchResultPlI = await Xrm.WebApi.retrieveMultipleRecords(
+    "new_price_list_item",
+    fetchXmlPlI
+  );
+  if (fetchResultPlI !== null && fetchResultPlI.entities.length) {
+    productPricePerUnit = fetchResultPlI.entities[0]["new_mon_price_per_unit"];
+  }
+
+  return { currenciId, currencyName, productPricePerUnit, exchangerate };
 }
 
 function calculateTotalAmount(executionContext) {
@@ -120,5 +214,21 @@ function calculateTotalAmount(executionContext) {
     formContext.getAttribute("new_mon_total_amount").setValue(totalAmount);
   } else {
     formContext.getAttribute("new_mon_total_amount").setValue(0);
+  }
+}
+
+async function onFormLoad(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const ClosedPostedValue = 100000001;
+  const workOrderRef = formContext.getAttribute("new_fk_work_order").getValue();
+  if (workOrderRef === null) return;
+  const workOrderId = workOrderRef[0].id;
+  const workOrder = await Xrm.WebApi.retrieveRecord("new_work_order", workOrderId, "?$select=new_os_status");
+  if(workOrder === null) return
+  if(workOrder["new_os_status"] === ClosedPostedValue) {
+    const controls = formContext.ui.controls.get();
+    controls.forEach((control) => {
+      control.setDisabled(true);
+    });
   }
 }

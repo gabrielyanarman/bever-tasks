@@ -6,78 +6,29 @@ namespace Customer_Management.Utilities
 {
     public static class Helpers
     {
-        public const string OperationAdd = "add";
-        public const string OperationDecrease = "decrease";
-
-        public static void UpdateInventoryTotalAmount(IOrganizationService service, string operationType, string inventoryLogicName, Guid inventoryId, Money totalAmountChange)
+        public static string getCustomerAssetNameAndUpdateAssetNumber(IOrganizationService service, Guid customerId)
         {
-            Entity inventory = service.Retrieve(inventoryLogicName, inventoryId, new ColumnSet("new_mon_total_amount"));
-            Money totalAmount = inventory.GetAttributeValue<Money>("new_mon_total_amount");
+            Entity myAccount = service.Retrieve("new_my_accounts", customerId, new ColumnSet("new_name", "new_int_asset_number"));
+            int assetNumber = myAccount.GetAttributeValue<int>("new_int_asset_number");
+            string accountName = myAccount.GetAttributeValue<string>("new_name");
+            myAccount.Attributes.Clear();
+            if (assetNumber == 0) assetNumber++;
+            myAccount["new_int_asset_number"] = assetNumber + 1;
+            service.Update(myAccount);
 
-            switch (operationType.ToLower())
+            if (assetNumber < 10)
             {
-                case OperationAdd:
-                    inventory["new_mon_total_amount"] = new Money((totalAmount?.Value ?? 0) + totalAmountChange.Value);
-                    break;
-
-                case OperationDecrease:
-                    if (totalAmount != null && totalAmount.Value >= totalAmountChange.Value)
-                    {
-                        inventory["new_mon_total_amount"] = new Money(totalAmount.Value - totalAmountChange.Value);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Insufficient total amount for decrease operation.");
-                    }
-                    break;
-
-                default:
-                    throw new ArgumentException("Invalid operation type.", nameof(operationType));
+                return accountName + "-000" + Convert.ToString(assetNumber);
             }
-
-            service.Update(inventory);
-        }
-        public static (EntityReference, decimal) getCurrencyFromPriceList(IOrganizationService service, string priceListLogicalName, Guid priceListId)
-        {
-            Entity priceList = service.Retrieve(priceListLogicalName, priceListId, new ColumnSet("transactioncurrencyid", "exchangerate"));
-            EntityReference currencyRef = priceList.GetAttributeValue<EntityReference>("transactioncurrencyid");
-            decimal exchangerate = priceList.GetAttributeValue<decimal>("exchangerate");
-            if(currencyRef != null)
+            else if (assetNumber > 10 && assetNumber < 100)
             {
-                return (currencyRef, exchangerate);
+                return accountName + "-00" + Convert.ToString(assetNumber);
+            } else if (assetNumber > 100 && assetNumber < 1000)
+            {
+                return accountName + "-0" + Convert.ToString(assetNumber);
             } else
             {
-                return (null, 1);
-            }
-        }
-        public static Money getPricePerUnit(IOrganizationService service, Guid productId, Guid priceListId, decimal exchangerate)
-        {
-            QueryExpression priceListItemQuery = new QueryExpression
-            {
-                EntityName = "new_price_list_item",
-                ColumnSet = new ColumnSet("new_mon_price_per_unit"),
-                Criteria =
-                {
-                    FilterOperator = LogicalOperator.And,
-                    Conditions =
-                    {
-                        new ConditionExpression("new_fk_price_list", ConditionOperator.Equal, priceListId),
-                        new ConditionExpression("new_fk_product", ConditionOperator.Equal, productId)
-                    }
-                }
-            };
-
-            EntityCollection priceListItems = service.RetrieveMultiple(priceListItemQuery);
-            if(priceListItems.Entities.Count > 0)
-            {
-                Entity priceListItem = priceListItems.Entities[0];
-                Money pricePerUnit = priceListItem.GetAttributeValue<Money>("new_mon_price_per_unit");
-                return pricePerUnit;
-            } else
-            {
-                Entity product = service.Retrieve("new_product", productId, new ColumnSet("new_mon_price_per_unit"));
-                Money pricePerUnit = product.GetAttributeValue<Money>("new_mon_price_per_unit");
-                return new Money(pricePerUnit.Value * exchangerate);
+                return accountName + "-" + Convert.ToString(assetNumber);
             }
         }
     }

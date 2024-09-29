@@ -64,3 +64,29 @@ function createContactsCustomView(executionContext) {
     true
     );
 }
+
+function setFieldsDisabledIfOrderClosed(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const ClosedPostedValue = 100000001;
+  const statusValue = formContext.getAttribute("new_os_status").getValue();
+  if (statusValue === ClosedPostedValue) {
+    toggleFieldsInWorkOrder(formContext, true);
+  } else {
+    toggleFieldsInWorkOrder(formContext, false);
+  }
+}
+
+function toggleFieldsInWorkOrder(formContext, state) {
+  const controls = formContext.ui.controls.get();
+  controls.forEach((control) => {
+    control.setDisabled(state);
+  });
+}
+
+function onFormLoad(executionContext) {
+  const formContext = executionContext.getFormContext();
+  const ClosedPostedValue = 100000001;
+  const statusValue = formContext.getAttribute("new_os_status").getValue();
+  if (statusValue !== ClosedPostedValue) return;
+  toggleFieldsInWorkOrder(formContext, true);
+}
