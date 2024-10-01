@@ -25,7 +25,7 @@ namespace Work_Order_Management
                     if (resourceRef != null)
                     {
                         Guid resourceId = resourceRef.Id;
-                        bool isResourceAvailable = Helpers.isResourceAvailable(service, resourceId, startDate, endDate);
+                        bool isResourceAvailable = Helpers.IsResourceAvailable(service, resourceId, startDate, endDate);
                         if(!isResourceAvailable)
                         {
                             throw new InvalidPluginExecutionException("This resource is busy during the specified time period.");

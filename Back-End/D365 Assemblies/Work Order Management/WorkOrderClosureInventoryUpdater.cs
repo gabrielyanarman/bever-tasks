@@ -24,7 +24,7 @@ namespace Work_Order_Management
                         OptionSetValue optionSetValue = workOrder.GetAttributeValue<OptionSetValue>("new_os_status");                       
                         if(optionSetValue?.Value == ClosedPostedValue)
                         {
-                            EntityCollection workOrderProducts = Helpers.getWorkOrderProducts(service, workOrder.Id);
+                            EntityCollection workOrderProducts = Helpers.GetWorkOrderProducts(service, workOrder.Id);
                             if (workOrderProducts != null)
                             {
                                 foreach (Entity workOrderProduct in workOrderProducts.Entities)
@@ -35,7 +35,7 @@ namespace Work_Order_Management
                                     if (inventoryRef == null || productRef == null || quantity == 0) return;
                                     Guid inventoryId = inventoryRef.Id;
                                     Guid productId = productRef.Id;
-                                    Helpers.updateInventoryProduct(service, inventoryId, productId, quantity);
+                                    Helpers.UpdateInventoryProduct(service, inventoryId, productId, quantity);
                                 }
                             }
                         }

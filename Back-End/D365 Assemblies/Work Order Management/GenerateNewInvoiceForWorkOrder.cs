@@ -50,11 +50,11 @@ namespace Work_Order_Management
                 string workOrderName = WoNumber.Get(executionContext);
                 int lastDashIndex = workOrderName.LastIndexOf('-');
                 string woNumber = workOrderName.Substring(lastDashIndex + 1);
-                EntityCollection woProducts = Helpers.getWorkOrderProducts(service, workOrderId);
-                EntityCollection woServices = Helpers.getWorkOrderServices(service, workOrderId);
+                EntityCollection woProducts = Helpers.GetWorkOrderProducts(service, workOrderId);
+                EntityCollection woServices = Helpers.GetWorkOrderServices(service, workOrderId);
 
-                Guid invoiceId = Helpers.createInvoiceForWorkOrder(service, woPriceListId, woCustomerId, workOrderId, woNumber);
-                Helpers.createWorkOrderInvoiceLines(service, invoiceId, woProducts, woServices);
+                Guid invoiceId = Helpers.CreateInvoiceForWorkOrder(service, woPriceListId, woCustomerId, workOrderId, woNumber);
+                Helpers.CreateWorkOrderInvoiceLines(service, invoiceId, woProducts, woServices);
             }
             catch (Exception ex)
             {

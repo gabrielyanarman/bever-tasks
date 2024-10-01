@@ -21,7 +21,7 @@ namespace Customer_Management
                     if(customerRef != null)
                     {
                         Guid customerId = customerRef.Id;
-                        string customerAssetName = Helpers.getCustomerAssetNameAndUpdateAssetNumber(service, customerId);
+                        string customerAssetName = Helpers.GetCustomerAssetNameAndUpdateAssetNumber(service, customerId);
                         customerAsset["new_name"] = customerAssetName;
                     }
                 }

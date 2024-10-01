@@ -50,8 +50,8 @@ namespace Customer_Management
                                     productId = productRef.Id;
                                 }
                                 int quantity = inventoryProduct.GetAttributeValue<int>("new_int_quantity");
-                                (EntityReference transactioncurrency, decimal exchangerate) = Helpers.getCurrencyFromPriceList(service, priceListLogicalName, newPriceListId);
-                                Money newPricePerUnit = Helpers.getPricePerUnit(service, productId, newPriceListId, exchangerate);
+                                (EntityReference transactioncurrency, decimal exchangerate) = Helpers.GetCurrencyFromPriceList(service, priceListLogicalName, newPriceListId);
+                                Money newPricePerUnit = Helpers.GetPricePerUnit(service, productId, newPriceListId, exchangerate);
                                 if (transactioncurrency != null)
                                 {
                                     inventoryProduct["transactioncurrencyid"] = transactioncurrency;
@@ -61,7 +61,7 @@ namespace Customer_Management
                                 service.Update(inventoryProduct);
                             }
                         }
-                        (EntityReference transactioncurrency1, decimal exchangerate1) = Helpers.getCurrencyFromPriceList(service, priceListLogicalName, newPriceListId);
+                        (EntityReference transactioncurrency1, decimal exchangerate1) = Helpers.GetCurrencyFromPriceList(service, priceListLogicalName, newPriceListId);
                         if (transactioncurrency1 != null)
                         {
                             inventory["transactioncurrencyid"] = transactioncurrency1;

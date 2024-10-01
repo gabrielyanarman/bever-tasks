@@ -25,7 +25,7 @@ namespace Work_Order_Management
                 EntityReference workOrderReference = WorkOrderRef.Get(executionContext);
                 if (workOrderReference == null) return;
                 Guid workOrderId = workOrderReference.Id;
-                Helpers.removeWorkOrderInvoices(service, workOrderId);
+                Helpers.RemoveWorkOrderInvoices(service, workOrderId);
             }
             catch (Exception ex)
             {

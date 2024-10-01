@@ -1,13 +1,12 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
-using System.Web.Services.Description;
 
 namespace Work_Order_Management.Utilities
 {
     public static class Helpers
     {
-        public static bool isResourceAvailable(IOrganizationService service, Guid resourceId, DateTime startDate, DateTime endDate)
+        public static bool IsResourceAvailable(IOrganizationService service, Guid resourceId, DateTime startDate, DateTime endDate)
         {
             QueryExpression bookingsQuery = new QueryExpression
             {
@@ -29,7 +28,7 @@ namespace Work_Order_Management.Utilities
 
             return bookings.Entities.Count == 0;
         }
-        public static EntityCollection getWorkOrderProducts(IOrganizationService service, Guid workOrderId)
+        public static EntityCollection GetWorkOrderProducts(IOrganizationService service, Guid workOrderId)
         {
             QueryExpression workOrderProductsQuery = new QueryExpression
             {
@@ -48,7 +47,7 @@ namespace Work_Order_Management.Utilities
             EntityCollection workOrderProducts = service.RetrieveMultiple(workOrderProductsQuery);
             return workOrderProducts;
         }
-        public static EntityCollection getWorkOrderServices(IOrganizationService service, Guid workOrderId)
+        public static EntityCollection GetWorkOrderServices(IOrganizationService service, Guid workOrderId)
         {
             QueryExpression workOrderServicesQuery = new QueryExpression
             {
@@ -67,7 +66,7 @@ namespace Work_Order_Management.Utilities
             EntityCollection workOrderServices = service.RetrieveMultiple(workOrderServicesQuery);
             return workOrderServices;
         }
-        public static void updateInventoryProduct(IOrganizationService service, Guid inventoryId, Guid productId, int quantity)
+        public static void UpdateInventoryProduct(IOrganizationService service, Guid inventoryId, Guid productId, int quantity)
         {
             QueryExpression inventoryProductsQuery = new QueryExpression
             {
@@ -110,7 +109,7 @@ namespace Work_Order_Management.Utilities
                 throw new InvalidPluginExecutionException("Тhere is not enough product in the inventory.");
             }
         }
-        public static void removeWorkOrderInvoices(IOrganizationService service, Guid workOrderId)
+        public static void RemoveWorkOrderInvoices(IOrganizationService service, Guid workOrderId)
         {
             QueryExpression invoicesQuery = new QueryExpression
             {
@@ -133,7 +132,7 @@ namespace Work_Order_Management.Utilities
                 service.Delete("new_invoice", invoice.Id);
             }
         }
-        public static Guid createInvoiceForWorkOrder(IOrganizationService service, Guid woPriceListId, Guid woCustomerId, Guid workOrderId, string woNumber)
+        public static Guid CreateInvoiceForWorkOrder(IOrganizationService service, Guid woPriceListId, Guid woCustomerId, Guid workOrderId, string woNumber)
         {
             Entity invoice = new Entity("new_invoice");
             invoice["new_name"] = "INV-" + woNumber;
@@ -142,7 +141,7 @@ namespace Work_Order_Management.Utilities
             invoice["new_fk_work_order"] = new EntityReference("new_work_order", workOrderId);
             return service.Create(invoice);
         }
-        public static void createWorkOrderInvoiceLines(IOrganizationService service, Guid invoiceId ,EntityCollection workOrderProducts, EntityCollection workOrderServices)
+        public static void CreateWorkOrderInvoiceLines(IOrganizationService service, Guid invoiceId ,EntityCollection workOrderProducts, EntityCollection workOrderServices)
         {
             if(workOrderProducts != null)
             {

@@ -6,7 +6,7 @@ namespace Customer_Management.Utilities
 {
     public static class Helpers
     {
-        public static string getCustomerAssetNameAndUpdateAssetNumber(IOrganizationService service, Guid customerId)
+        public static string GetCustomerAssetNameAndUpdateAssetNumber(IOrganizationService service, Guid customerId)
         {
             Entity myAccount = service.Retrieve("new_my_accounts", customerId, new ColumnSet("new_name", "new_int_asset_number"));
             int assetNumber = myAccount.GetAttributeValue<int>("new_int_asset_number");

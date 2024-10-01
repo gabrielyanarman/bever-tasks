@@ -37,7 +37,7 @@ namespace Customer_Management.Utilities
 
             service.Update(inventory);
         }
-        public static (EntityReference, decimal) getCurrencyFromPriceList(IOrganizationService service, string priceListLogicalName, Guid priceListId)
+        public static (EntityReference, decimal) GetCurrencyFromPriceList(IOrganizationService service, string priceListLogicalName, Guid priceListId)
         {
             Entity priceList = service.Retrieve(priceListLogicalName, priceListId, new ColumnSet("transactioncurrencyid", "exchangerate"));
             EntityReference currencyRef = priceList.GetAttributeValue<EntityReference>("transactioncurrencyid");
@@ -51,7 +51,7 @@ namespace Customer_Management.Utilities
                 return (null, 1);
             }
         }
-        public static Money getPricePerUnit(IOrganizationService service, Guid productId, Guid priceListId, decimal exchangerate)
+        public static Money GetPricePerUnit(IOrganizationService service, Guid productId, Guid priceListId, decimal exchangerate)
         {
             QueryExpression priceListItemQuery = new QueryExpression
             {
