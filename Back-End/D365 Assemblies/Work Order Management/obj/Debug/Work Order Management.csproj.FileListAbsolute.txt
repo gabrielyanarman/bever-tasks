@@ -30,3 +30,10 @@ C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D
 C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\obj\Debug\Work Ord.14216E21.Up2Date
 C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\obj\Debug\Work Order Management.dll
 C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\obj\Debug\Work Order Management.pdb
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Microsoft.Rest.ClientRuntime.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Microsoft.Xrm.Sdk.Deployment.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Microsoft.Xrm.Tooling.Connector.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Asus\OneDrive\Рабочий стол\programing\BEVER\tasks\Back-End\D365 Assemblies\Work Order Management\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.xml

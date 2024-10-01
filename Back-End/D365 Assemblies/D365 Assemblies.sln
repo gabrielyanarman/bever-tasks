@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Work Order Management", "Wo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product Management", "Product Management\Product Management.csproj", "{6C9D5A73-99C9-40DA-A983-B8F962B3B4BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource Management", "Resource Management\Resource Management.csproj", "{2E2B575A-AE5E-42C5-AFFB-F7DEDF850593}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6C9D5A73-99C9-40DA-A983-B8F962B3B4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C9D5A73-99C9-40DA-A983-B8F962B3B4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C9D5A73-99C9-40DA-A983-B8F962B3B4BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E2B575A-AE5E-42C5-AFFB-F7DEDF850593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E2B575A-AE5E-42C5-AFFB-F7DEDF850593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E2B575A-AE5E-42C5-AFFB-F7DEDF850593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E2B575A-AE5E-42C5-AFFB-F7DEDF850593}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
