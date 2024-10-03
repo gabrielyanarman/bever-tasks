@@ -33,7 +33,7 @@ namespace Work_Order_Management.Utilities
             QueryExpression workOrderProductsQuery = new QueryExpression
             {
                 EntityName = "new_work_order_product",
-                ColumnSet = new ColumnSet("new_fk_inventory", "new_fk_product", "new_int_quantity", "new_mon_price_per_unit", "new_mon_total_amount"),
+                ColumnSet = new ColumnSet("new_fk_inventory", "new_fk_product", "new_int_quantity", "new_mon_price_per_unit", "new_mon_total_amount", "new_mon_cost"),
                 Criteria = 
                 {
                     FilterOperator = LogicalOperator.And,
@@ -52,7 +52,7 @@ namespace Work_Order_Management.Utilities
             QueryExpression workOrderServicesQuery = new QueryExpression
             {
                 EntityName = "new_work_order_service",
-                ColumnSet = new ColumnSet("new_int_duration", "new_mon_price_per_unit", "new_mon_total_amount"),
+                ColumnSet = new ColumnSet("new_int_duration", "new_mon_price_per_unit", "new_mon_total_amount", "new_fk_service", "new_fk_resource"),
                 Criteria =
                 {
                     FilterOperator = LogicalOperator.And,
@@ -176,6 +176,79 @@ namespace Work_Order_Management.Utilities
                     invoiceLine["new_mon_total_amount"] = workOrderService.GetAttributeValue<Money>("new_mon_total_amount");
                     service.Create(invoiceLine);
                 }
+            }
+        }
+        public static string GetNameFromProduct(IOrganizationService service, Guid productId)
+        {
+            string logicalName = "new_product";
+            Entity product = service.Retrieve(logicalName, productId, new ColumnSet("new_name"));
+            return product.GetAttributeValue<string>("new_name");
+        }
+        public static Money GetHourlyRateFromResource(IOrganizationService service, Guid resourceId)
+        {
+            string logicalName = "new_resource";
+            Entity resource = service.Retrieve(logicalName, resourceId, new ColumnSet("new_mon_hourly_rate"));
+            return resource.GetAttributeValue<Money>("new_mon_hourly_rate");
+        }
+        public static void DeleteActualsFromWorkOrder(IOrganizationService service, Guid workOrderId)
+        {
+            QueryExpression actualsQuery = new QueryExpression
+            {
+                EntityName = "new_actual",
+                ColumnSet = new ColumnSet(null),
+                Criteria =
+                {
+                    FilterOperator = LogicalOperator.And,
+                    Conditions = {
+                        new ConditionExpression("new_fk_work_order", ConditionOperator.Equal, workOrderId)
+                    }
+                }
+            };
+            EntityCollection actuals = service.RetrieveMultiple(actualsQuery);
+            if (actuals == null) return;
+            foreach (Entity actual in actuals.Entities)
+            {
+                service.Delete(actual.LogicalName, actual.Id);
+            }           
+        }
+        public static void CreateActualsFromWorkOrderProducts(IOrganizationService service, EntityCollection workOrderProducts, Guid workOrderId)
+        {
+            foreach (Entity workOrderProduct in workOrderProducts.Entities)
+            {
+                string productName = null;
+                EntityReference productRef = workOrderProduct.GetAttributeValue<EntityReference>("new_fk_product");
+                if (productRef != null) productName = GetNameFromProduct(service, productRef.Id);
+                Money costPerUnit = workOrderProduct.GetAttributeValue<Money>("new_mon_cost");
+                decimal quantity = Convert.ToDecimal(workOrderProduct.GetAttributeValue<int>("new_int_quantity"));
+
+                Entity actual = new Entity("new_actual");
+                actual["new_name"] = productName;
+                actual["new_fk_work_order"] = new EntityReference("new_work_order", workOrderId);
+                actual["new_mon_cost_per_unit"] = costPerUnit;
+                actual["new_dec_quantity"] = quantity;
+                actual["new_mon_total_cost"] = new Money(quantity * costPerUnit.Value);
+                service.Create(actual);
+            }
+        }
+        public static void CreateActualsFromWorkOrderServices(IOrganizationService service, EntityCollection workOrderServices, Guid workOrderId)
+        {
+            foreach (Entity workOrderService in workOrderServices.Entities)
+            {
+                string serviceName = null;
+                Money resourceHourlyRate = null;
+                EntityReference serviceRef = workOrderService.GetAttributeValue<EntityReference>("new_fk_service");
+                if (serviceRef != null) serviceName = GetNameFromProduct(service, serviceRef.Id);
+                EntityReference resourceRef = workOrderService.GetAttributeValue<EntityReference>("new_fk_resource");
+                if (resourceRef != null) resourceHourlyRate = GetHourlyRateFromResource(service, resourceRef.Id);
+                decimal duration = Convert.ToDecimal(workOrderService.GetAttributeValue<int>("new_int_duration"))/60;
+
+                Entity actual = new Entity("new_actual");
+                actual["new_name"] = serviceName;
+                actual["new_fk_work_order"] = new EntityReference("new_work_order", workOrderId);
+                actual["new_mon_cost_per_unit"] = resourceHourlyRate;
+                actual["new_dec_quantity"] = duration;
+                actual["new_mon_total_cost"] = new Money(duration * resourceHourlyRate.Value);
+                service.Create(actual);
             }
         }
     }
